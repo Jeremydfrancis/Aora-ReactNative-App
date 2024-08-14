@@ -1,9 +1,8 @@
-import React from 'react'
+import React from "react";
+import { Text } from "react-native";
 
 const query = () => {
-  return (
-    <div>[query]</div>
-  )
-}
+  return <Text>Layout</Text>;
+};
 
-export default query
+export default query;

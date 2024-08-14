@@ -1,7 +1,8 @@
 import React from "react";
+import { Text } from "react-native";
 
 const create = () => {
-  return <div>create</div>;
+  return <Text>Layout</Text>;
 };
 
 export default create;

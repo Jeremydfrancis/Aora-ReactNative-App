@@ -1,7 +1,8 @@
 import React from "react";
+import { Text } from "react-native";
 
 const profile = () => {
-  return <div>profile</div>;
+  return <Text>Layout</Text>;
 };
 
 export default profile;

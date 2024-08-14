@@ -1,9 +1,8 @@
-import React from 'react'
+import React from "react";
+import { Text } from "react-native";
 
 const layout = () => {
-  return (
-    <div>_layout</div>
-  )
-}
+  return <Text>Layout</Text>;
+};
 
-export default layout
+export default layout;

@@ -1,7 +1,8 @@
 import React from "react";
+import { Text } from "react-native";
 
 const home = () => {
-  return <div>home</div>;
+  return <Text>Layout</Text>;
 };
 
 export default home;

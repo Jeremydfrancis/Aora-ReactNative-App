@@ -1,9 +1,8 @@
-import React from 'react'
+import React from "react";
+import { Text } from "react-native";
 
 const index = () => {
-  return (
-    <div>index</div>
-  )
-}
+  return <Text>Layout</Text>;
+};
 
-export default index
+export default index;

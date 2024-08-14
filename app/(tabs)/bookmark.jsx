@@ -1,7 +1,8 @@
 import React from "react";
+import { Text } from "react-native";
 
 const bookmark = () => {
-  return <div>bookmark</div>;
+  return <Text>Layout</Text>;
 };
 
 export default bookmark;
