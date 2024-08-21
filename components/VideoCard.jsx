@@ -1,73 +1,144 @@
-import { useState } from "react";
-import { ResizeMode, Video } from "expo-av";
-import { View, Text, TouchableOpacity, Image } from "react-native";
-
+import React, { useState, useRef, useEffect } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+  Alert,
+} from "react-native";
+import { Video } from "expo-av";
+import { WebView } from "react-native-webview";
 import { icons } from "../constants";
 
 const VideoCard = ({ title, creator, avatar, thumbnail, video }) => {
   const [play, setPlay] = useState(false);
+  const videoRef = useRef(null);
+  const isEmbedded =
+    video.includes("youtube.com") || video.includes("vimeo.com");
+
+  useEffect(() => {
+    return () => {
+      if (videoRef.current) {
+        videoRef.current.unloadAsync(); // Unload the video when the component unmounts
+      }
+    };
+  }, []);
+
+  const itemStyle = {
+    height: Dimensions.get("window").width * 0.5625, // 16:9 aspect ratio
+    width: "100%",
+    marginTop: 14,
+    borderRadius: 10,
+    overflow: "hidden",
+  };
 
   return (
-    <View className="flex flex-col items-center px-4 mb-14">
-      <View className="flex flex-row gap-3 items-start">
-        <View className="flex justify-center items-center flex-row flex-1">
-          <View className="w-[46px] h-[46px] rounded-lg border border-secondary flex justify-center items-center p-0.5">
+    <View
+      style={{
+        flexDirection: "column",
+        alignItems: "center",
+        paddingHorizontal: 16,
+        marginBottom: 56,
+      }}
+    >
+      <View style={{ flexDirection: "row", gap: 12, alignItems: "flex-start" }}>
+        <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
+          <View
+            style={{
+              width: 46,
+              height: 46,
+              borderRadius: 10,
+              borderWidth: 1,
+              borderColor: "#ccc",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: 1,
+            }}
+          >
             <Image
               source={{ uri: avatar }}
-              className="w-full h-full rounded-lg"
+              style={{ width: "100%", height: "100%", borderRadius: 10 }}
               resizeMode="cover"
             />
           </View>
 
-          <View className="flex justify-center flex-1 ml-3 gap-y-1">
+          <View style={{ flex: 1, marginLeft: 12 }}>
             <Text
-              className="font-psemibold text-sm text-white"
+              style={{ fontWeight: "600", fontSize: 14, color: "#fff" }}
               numberOfLines={1}
             >
               {title}
             </Text>
-            <Text
-              className="text-xs text-gray-100 font-pregular"
-              numberOfLines={1}
-            >
+            <Text style={{ fontSize: 12, color: "#ccc" }} numberOfLines={1}>
               {creator}
             </Text>
           </View>
         </View>
 
-        <View className="pt-2">
-          <Image source={icons.menu} className="w-5 h-5" resizeMode="contain" />
+        <View style={{ paddingTop: 8 }}>
+          <Image
+            source={icons.menu}
+            style={{ width: 20, height: 20 }}
+            resizeMode="contain"
+          />
         </View>
       </View>
 
       {play ? (
-        <Video
-          source={{ uri: video }}
-          className="w-full h-60 rounded-xl mt-3"
-          resizeMode={ResizeMode.CONTAIN}
-          useNativeControls
-          shouldPlay
-          onPlaybackStatusUpdate={(status) => {
-            if (status.didJustFinish) {
-              setPlay(false);
-            }
-          }}
-        />
+        isEmbedded ? (
+          <View style={itemStyle}>
+            <WebView
+              source={{ uri: video }}
+              style={{ flex: 1 }}
+              allowsInlineMediaPlayback={true}
+              javaScriptEnabled={true}
+              allowsFullscreenVideo={true}
+            />
+          </View>
+        ) : (
+          <View style={itemStyle}>
+            <Video
+              ref={videoRef}
+              source={{ uri: video }}
+              style={{ flex: 1, margin: 0, padding: 0 }}
+              useNativeControls
+              shouldPlay
+              resizeMode="cover"
+              onPlaybackStatusUpdate={(status) => {
+                if (status.didJustFinish) {
+                  setPlay(false);
+                }
+                if (!status.isLoaded) {
+                  Alert.alert("Error", "Failed to load the video.");
+                  setPlay(false);
+                }
+              }}
+              onError={(error) => {
+                Alert.alert("Error", "Failed to load the video.");
+                setPlay(false);
+              }}
+            />
+          </View>
+        )
       ) : (
         <TouchableOpacity
+          style={[
+            itemStyle,
+            { justifyContent: "center", alignItems: "center" },
+          ]}
           activeOpacity={0.7}
           onPress={() => setPlay(true)}
-          className="w-full h-60 rounded-xl mt-3 relative flex justify-center items-center"
         >
           <Image
             source={{ uri: thumbnail }}
-            className="w-full h-full rounded-xl mt-3"
+            style={{ width: "100%", height: "100%", borderRadius: 10 }}
             resizeMode="cover"
           />
 
           <Image
             source={icons.play}
-            className="w-12 h-12 absolute"
+            style={{ width: 48, height: 48, position: "absolute" }}
             resizeMode="contain"
           />
         </TouchableOpacity>

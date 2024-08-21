@@ -84,7 +84,7 @@ const Home = () => {
           {latestPostsError ? (
             <Text>Error loading latest posts.</Text>
           ) : (
-            <Trending posts={latestPosts ?? []} />
+            <Trending className="z-50" posts={latestPosts ?? []} />
           )}
         </View>
       </View>
@@ -101,7 +101,7 @@ const Home = () => {
   }
 
   return (
-    <SafeAreaView className="bg-primary">
+    <SafeAreaView className="bg-primary h-full">
       <FlatList
         data={posts}
         keyExtractor={(item) => item.$id}
@@ -118,11 +118,15 @@ const Home = () => {
         ListEmptyComponent={() => (
           <EmptyState
             title="No Videos Found"
-            subtitle="No videos created yet"
+            subtitle="Be the first to upload a video!"
           />
         )}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          <RefreshControl
+            tintColor="#fff"
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
         }
       />
     </SafeAreaView>
