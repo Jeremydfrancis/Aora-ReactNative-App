@@ -11,6 +11,7 @@ module.exports = function (api) {
           path: ".env",
         },
       ],
+      "@babel/plugin-transform-logical-assignment-operators", // Add this line
     ],
   };
 };

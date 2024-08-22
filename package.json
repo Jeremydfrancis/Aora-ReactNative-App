@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.24.3",
+    "@babel/plugin-transform-logical-assignment-operators": "^7.24.7",
     "tailwindcss": "^3.3.2"
   },
   "private": true

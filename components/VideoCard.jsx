@@ -24,6 +24,11 @@ const VideoCard = ({ title, creator, avatar, thumbnail, video }) => {
       }
     };
   }, []);
+  useEffect(() => {
+    if (!video) {
+      Alert.alert("Data Issue", "Missing video URL for " + title);
+    }
+  }, [video, title]);
 
   const itemStyle = {
     height: Dimensions.get("window").width * 0.5625, // 16:9 aspect ratio
