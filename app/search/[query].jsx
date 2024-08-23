@@ -72,7 +72,7 @@ const Search = () => {
       {!isLoading && posts && posts.length > 0 && (
         <CustomButton
           title="Back to Explore"
-          handlePress={() => router.push("/home")}
+          handlePress={() => router.replace("/home")}
           containerStyles="w-full my-5"
         />
       )}
