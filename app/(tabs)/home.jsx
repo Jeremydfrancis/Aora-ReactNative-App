@@ -33,10 +33,9 @@ const Home = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        console.log("Fetching current user...");
         const currentUser = await getCurrentUser();
+
         if (currentUser) {
-          console.log("User fetched successfully:");
           setUser(currentUser);
         } else {
           console.log("No user found.");
@@ -110,8 +109,8 @@ const Home = () => {
             title={item.title}
             thumbnail={item.thumbnail}
             video={item.video}
-            creator={item.creator.username}
-            avatar={item.creator.avatar}
+            creator={item.creator?.username || "Unknown"}
+            avatar={item.creator?.avatar || images.defaultAvatar} // Use a default image if avatar is missing
           />
         )}
         ListHeaderComponent={renderListHeader}

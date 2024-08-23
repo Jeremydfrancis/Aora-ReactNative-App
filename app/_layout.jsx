@@ -3,6 +3,7 @@ import { useFonts } from "expo-font";
 import { useEffect } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
 import GlobalProvider from "../context/GlobalProvider";
+// Adjust the import path as needed
 
 const RootLayout = () => {
   // Immediately prevent the splash screen from auto-hiding

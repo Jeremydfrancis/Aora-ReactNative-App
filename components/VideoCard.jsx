@@ -14,6 +14,8 @@ import { icons } from "../constants";
 const VideoCard = ({ title, creator, avatar, thumbnail, video }) => {
   const [play, setPlay] = useState(false);
   const videoRef = useRef(null);
+
+  // Determine if the video is embedded (YouTube/Vimeo)
   const isEmbedded =
     video.includes("youtube.com") || video.includes("vimeo.com");
 
@@ -24,6 +26,7 @@ const VideoCard = ({ title, creator, avatar, thumbnail, video }) => {
       }
     };
   }, []);
+
   useEffect(() => {
     if (!video) {
       Alert.alert("Data Issue", "Missing video URL for " + title);
@@ -80,14 +83,6 @@ const VideoCard = ({ title, creator, avatar, thumbnail, video }) => {
             </Text>
           </View>
         </View>
-
-        <View style={{ paddingTop: 8 }}>
-          <Image
-            source={icons.menu}
-            style={{ width: 20, height: 20 }}
-            resizeMode="contain"
-          />
-        </View>
       </View>
 
       {play ? (
@@ -108,19 +103,15 @@ const VideoCard = ({ title, creator, avatar, thumbnail, video }) => {
               source={{ uri: video }}
               style={{ flex: 1, margin: 0, padding: 0 }}
               useNativeControls
-              shouldPlay
               resizeMode="cover"
+              shouldPlay
               onPlaybackStatusUpdate={(status) => {
                 if (status.didJustFinish) {
                   setPlay(false);
                 }
-                if (!status.isLoaded) {
-                  Alert.alert("Error", "Failed to load the video.");
-                  setPlay(false);
-                }
               }}
               onError={(error) => {
-                Alert.alert("Error", "Failed to load the video.");
+                console.error("Failed to load video:", error);
                 setPlay(false);
               }}
             />
@@ -140,7 +131,6 @@ const VideoCard = ({ title, creator, avatar, thumbnail, video }) => {
             style={{ width: "100%", height: "100%", borderRadius: 10 }}
             resizeMode="cover"
           />
-
           <Image
             source={icons.play}
             style={{ width: 48, height: 48, position: "absolute" }}

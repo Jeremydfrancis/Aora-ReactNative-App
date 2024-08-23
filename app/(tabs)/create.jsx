@@ -1,26 +1,26 @@
-import { useState } from "react";
-import { router } from "expo-router";
 import { ResizeMode, Video } from "expo-av";
-import * as DocumentPicker from "expo-document-picker";
-import { SafeAreaView } from "react-native-safe-area-context";
+import * as ImagePicker from "expo-image-picker";
+import React, { useState } from "react";
 import {
-  View,
-  Text,
   Alert,
   Image,
-  TouchableOpacity,
   ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-
-import { icons } from "../../constants";
-import { createVideoPost } from "../../lib/appwrite";
-import FormField from "../../components/FormField";
+import { SafeAreaView } from "react-native-safe-area-context";
 import CustomButton from "../../components/CustomButton";
+import FormField from "../../components/FormField";
 
-/* import { useGlobalContext } from "../context/GlobalProvider";
- */
+import { router } from "expo-router";
+import { icons } from "../../constants";
+import { useGlobalContext } from "../../context/GlobalProvider";
+import { createVideoPost } from "../../lib/appwrite";
+
 const Create = () => {
-  /* const { user } = useGlobalContext(); */
+  const { user } = useGlobalContext();
   const [uploading, setUploading] = useState(false);
   const [form, setForm] = useState({
     title: "",
@@ -30,55 +30,39 @@ const Create = () => {
   });
 
   const openPicker = async (selectType) => {
-    const result = await DocumentPicker.getDocumentAsync({
-      type:
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes:
         selectType === "image"
-          ? ["image/png", "image/jpg"]
-          : ["video/mp4", "video/gif"],
+          ? ImagePicker.MediaTypeOptions.Images
+          : ImagePicker.MediaTypeOptions.Videos,
+      aspect: [4, 3],
+      quality: 1,
     });
-
     if (!result.canceled) {
       if (selectType === "image") {
-        setForm({
-          ...form,
-          thumbnail: result.assets[0],
-        });
+        setForm({ ...form, thumbnail: result.assets[0] });
       }
-
       if (selectType === "video") {
-        setForm({
-          ...form,
-          video: result.assets[0],
-        });
+        setForm({ ...form, video: result.assets[0] });
       }
-    } else {
-      setTimeout(() => {
-        Alert.alert("Document picked", JSON.stringify(result, null, 2));
-      }, 100);
     }
   };
 
   const submit = async () => {
-    if (
-      (form.prompt === "") |
-      (form.title === "") |
-      !form.thumbnail |
-      !form.video
-    ) {
-      return Alert.alert("Please provide all fields");
+    if (!form.title || !form.video || !form.prompt) {
+      Alert.alert("Error", "Please fill in all fields");
     }
-
     setUploading(true);
     try {
       await createVideoPost({
         ...form,
         userId: user.$id,
       });
-
-      Alert.alert("Success", "Post uploaded successfully");
+      Alert.alert("Success", "post uploaded successfully");
       router.push("/home");
     } catch (error) {
       Alert.alert("Error", error.message);
+      setUploading(false);
     } finally {
       setForm({
         title: "",
@@ -86,15 +70,16 @@ const Create = () => {
         thumbnail: null,
         prompt: "",
       });
-
       setUploading(false);
     }
   };
 
   return (
-    <SafeAreaView className="bg-primary h-full">
+    <SafeAreaView className="h-full bg-primary">
       <ScrollView className="px-4 my-6">
-        <Text className="text-2xl text-white font-psemibold">Upload Video</Text>
+        <Text className="text-2xl text-center text-white font-psemibold">
+          Upload Video
+        </Text>
 
         <FormField
           title="Video Title"
@@ -104,7 +89,7 @@ const Create = () => {
           otherStyles="mt-10"
         />
 
-        <View className="mt-7 space-y-2">
+        <View className="space-y-2 mt-7">
           <Text className="text-base text-gray-100 font-pmedium">
             Upload Video
           </Text>
@@ -119,8 +104,8 @@ const Create = () => {
                 isLooping
               />
             ) : (
-              <View className="w-full h-40 px-4 bg-black-100 rounded-2xl border border-black-200 flex justify-center items-center">
-                <View className="w-14 h-14 border border-dashed border-secondary-100 flex justify-center items-center">
+              <View className="flex items-center justify-center w-full h-40 px-4 border bg-black-100 rounded-2xl border-black-200">
+                <View className="flex items-center justify-center border border-dashed w-14 h-14 border-secondary-100">
                   <Image
                     source={icons.upload}
                     resizeMode="contain"
@@ -133,7 +118,7 @@ const Create = () => {
           </TouchableOpacity>
         </View>
 
-        <View className="mt-7 space-y-2">
+        <View className="space-y-2 mt-7">
           <Text className="text-base text-gray-100 font-pmedium">
             Thumbnail Image
           </Text>
@@ -146,7 +131,7 @@ const Create = () => {
                 className="w-full h-64 rounded-2xl"
               />
             ) : (
-              <View className="w-full h-16 px-4 bg-black-100 rounded-2xl border-2 border-black-200 flex justify-center items-center flex-row space-x-2">
+              <View className="flex flex-row items-center justify-center w-full h-16 px-4 space-x-2 border-2 bg-black-100 rounded-2xl border-black-200">
                 <Image
                   source={icons.upload}
                   resizeMode="contain"
