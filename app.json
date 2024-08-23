@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "aora",
-    "slug": "aora",
+    "slug": "aora-jeremyfrancis",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -12,10 +12,13 @@
       "backgroundColor": "#ffffff"
     },
     "scheme": "aora",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
-      "package": "com.jeremy.aora"
+      "package": "com.jeremy.aora",
+      "bundleIdentifier": "com.jeremy.aora"
     },
     "android": {
       "adaptiveIcon": {
@@ -27,6 +30,24 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-router", "expo-font"]
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "bdf78d7a-f95f-4d3f-b66a-b9ad3473531d"
+      }
+    },
+    "owner": "jeremydfrancis",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/bdf78d7a-f95f-4d3f-b66a-b9ad3473531d"
+    }
   }
 }

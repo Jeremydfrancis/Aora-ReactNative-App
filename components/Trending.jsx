@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ResizeMode, Video } from "expo-av";
 import * as Animatable from "react-native-animatable";
 import {
@@ -35,9 +35,35 @@ const isEmbeddedVideo = (url) => {
   return url.includes("youtube.com") || url.includes("vimeo.com");
 };
 
-const TrendingItem = ({ activeItem, item }) => {
+const TrendingItem = ({ activeItem, item, onVideoPress }) => {
   const [play, setPlay] = useState(false);
+  const videoRef = useRef(null);
+
+  if (!item || !item.video) {
+    return null; // Early return if item or video is undefined
+  }
+
   const isEmbedded = isEmbeddedVideo(item.video);
+
+  useEffect(() => {
+    if (activeItem !== item.$id && videoRef.current) {
+      videoRef.current.stopAsync(); // Stop the video if it's no longer the active item
+      setPlay(false);
+    }
+  }, [activeItem, item.$id]);
+
+  useEffect(() => {
+    return () => {
+      if (videoRef.current) {
+        videoRef.current.unloadAsync(); // Unload video when the component unmounts
+      }
+    };
+  }, []);
+
+  const handlePress = () => {
+    onVideoPress(item.$id); // Notify parent component which video is being played
+    setPlay(true);
+  };
 
   const itemStyle = {
     width: Dimensions.get("window").width * 0.55,
@@ -70,6 +96,7 @@ const TrendingItem = ({ activeItem, item }) => {
         ) : (
           <View style={itemStyle}>
             <Video
+              ref={videoRef}
               source={{ uri: item.video }}
               style={{ flex: 1 }}
               useNativeControls
@@ -91,7 +118,7 @@ const TrendingItem = ({ activeItem, item }) => {
         <TouchableOpacity
           style={itemStyle}
           activeOpacity={0.7}
-          onPress={() => setPlay(true)}
+          onPress={handlePress}
         >
           <ImageBackground
             source={{ uri: item.thumbnail }}
@@ -119,7 +146,11 @@ const TrendingItem = ({ activeItem, item }) => {
 };
 
 const Trending = ({ posts }) => {
-  const [activeItem, setActiveItem] = useState(posts[0]);
+  const [activeItem, setActiveItem] = useState(null);
+
+  const handleVideoPress = (itemId) => {
+    setActiveItem(itemId);
+  };
 
   const viewableItemsChanged = ({ viewableItems }) => {
     if (viewableItems.length > 0) {
@@ -133,7 +164,11 @@ const Trending = ({ posts }) => {
       horizontal
       keyExtractor={(item) => item.$id}
       renderItem={({ item }) => (
-        <TrendingItem activeItem={activeItem} item={item} />
+        <TrendingItem
+          activeItem={activeItem}
+          item={item}
+          onVideoPress={handleVideoPress}
+        />
       )}
       onViewableItemsChanged={viewableItemsChanged}
       viewabilityConfig={{
