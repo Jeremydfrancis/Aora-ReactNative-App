@@ -48,4 +48,4 @@ and many more, including code architecture and reusability
 
    or scan the QR code below with the Expo Go app:
 
-![QR Code](https://raw.githubusercontent.com/yourusername/yourrepository/main/image.png)
+![QR Code](QrCode.png)
