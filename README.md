@@ -41,4 +41,7 @@ and many more, including code architecture and reusability
    ```bash
     npx expo start
    ```
+## View on your phone!
 
+1. Download the Expo Go App in the appstore
+2. [Click this link to open the app in the Expo Go app](https://expo.dev/preview/update?message=Merge%20branch%20'main'%20of%20https%3A%2F%2Fgithub.com%2FJeremydfrancis%2FAora-ReactNative-App&updateRuntimeVersion=1.0.0&createdAt=2024-08-23T21%3A51%3A26.626Z&slug=exp&projectId=bdf78d7a-f95f-4d3f-b66a-b9ad3473531d&group=6f73ffd8-b28a-4dad-b774-bcd350f9841d)
